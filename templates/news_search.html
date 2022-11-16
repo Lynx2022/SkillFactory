@@ -2,6 +2,7 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
+{% load custom_tags %}
 <!-- Название у нас будет products -->
 {% block title %}
 News
@@ -9,8 +10,13 @@ News
 
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>Все новости</h1>
+   <h1>Все новости</h1>
    {{news|length}}
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+   </form>
+
    <hr>
    {% if news %}
        <table>
@@ -41,7 +47,7 @@ News
        <h2>Новостей нет!</h2>
    {% endif %}
    {% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
+       <a href="?{% url_replace page=1 %}">1</a>
        {% if page_obj.previous_page_number != 1 %}
            ...
            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
