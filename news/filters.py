@@ -1,4 +1,4 @@
-from django_filters import FilterSet, ModelChoiceFilter, DateTimeFilter
+from django_filters import FilterSet, ModelChoiceFilter, DateTimeFilter, CharFilter
 from .models import Post, Category
 from django.forms import DateTimeInput
 
@@ -21,6 +21,8 @@ class NewsFilter(FilterSet):
         empty_label='все',
     )
 
-    class Meta:
-        model = Post
-        fields = {'title' : ['icontains'],}
+    title_filter = CharFilter(
+        field_name='title',
+        lookup_expr='icontains',
+        label='Заголовок содержит',
+    )
