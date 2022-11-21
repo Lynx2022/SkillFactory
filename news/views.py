@@ -5,6 +5,7 @@ from .models import Post
 from .forms import NewForm, ArticleForm
 from .filters import NewsFilter
 from django.http import HttpResponse
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class PostList(ListView):
@@ -22,7 +23,9 @@ class PostDetail(DetailView):
     context_object_name = 'new'
 
 
-class NewCreate(CreateView):
+class NewCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('simpleapp.add_new',)
+    raise_exception = True
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
@@ -33,7 +36,9 @@ class NewCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('simpleapp.add_article',)
+    raise_exception = True
     form_class = ArticleForm
     model = Post
     template_name = 'article_edit.html'
@@ -44,25 +49,29 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewUpdate(UpdateView):
+class NewUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('simpleapp.change_new',)
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
 
 
-class ArticleUpdate(UpdateView):
+class ArticleUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('simpleapp.change_article',)
     form_class = ArticleForm
     model = Post
     template_name = 'article_edit.html'
 
 
 class NewDelete(DeleteView):
+    permission_required = ('simpleapp.delete_new',)
     model = Post
     template_name = 'new_delete.html'
     success_url = reverse_lazy('post_list')
 
 
 class ArticleDelete(DeleteView):
+    permission_required = ('simpleapp.delete_article',)
     model = Post
     template_name = 'article_delete.html'
     success_url = reverse_lazy('post_list')

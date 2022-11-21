@@ -10,6 +10,12 @@ News
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все новости</h1>
+   {% if perms.simpleapp.add_new %}
+   <a href="{% url 'new_create' %}">Добавить новость</a>
+   {% endif %}
+   {% if perms.simpleapp.add_article %}
+   <a href="{% url 'article_create' %}">Добавить статью</a>
+   {% endif %}
    {{news|length}}
    <hr>
    {% if news %}
@@ -18,6 +24,11 @@ News
                <td>Название</td>
                <td>Дата публикации</td>
                <td>содержание</td>
+
+               {% if perms.simpleapp.change_new or perms.simpleapp.delete_new %}
+               <td>Действия</td>
+               {% endif %}
+
            </tr>
 
            <!-- Для каждого товара будете генерироваться новая строчка,
@@ -33,6 +44,16 @@ News
                <td>{{ new.title|censor }}</td>
                <td>{{ new.dateCreation }}</td>
                <td>{{ new.text|truncatechars:20|censor }}</td>
+
+               <td>
+                   {% if perms.simpleapp.change_new %}
+                   <a href="{% url 'new_update' pk=new.id %}">Изменить</a>
+                   {% endif %}
+
+
+
+               </td>
+
            </tr>
            {% endfor %}
 
