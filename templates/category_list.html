@@ -1,31 +1,27 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
-{% load custom_filters %}
 
+{% load custom_filters %}
+<!-- Название у нас будет products -->
 {% block title %}
 News
 {% endblock title %}
 
-
+<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все новости</h1>
-
+   {% if is_not_subscriber %}
+   <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn-secondary btn-sm">Подписаться</a></p>
+   {% endif %}
    {% if perms.simpleapp.add_new %}
-       {% if posts_limit %}
-       <h1>Лимит новостей в день исчерпан</h1>
-       {% else %}
-       <a href="{% url 'new_create' %}">Добавить новость</a>
-       {% endif %}
+   <a href="{% url 'new_create' %}">Добавить новость</a>
    {% endif %}
    {% if perms.simpleapp.add_article %}
-       {% if posts_limit %}
-       <h1>Лимит новостей в день исчерпан</h1>
-       {% else %}
-       <a href="{% url 'article_create' %}">Добавить статью</a>
-       {% endif %}
+   <a href="{% url 'article_create' %}">Добавить статью</a>
    {% endif %}
    {{news|length}}
    <hr>
-   {% if news %}
+   {% if category_news_list %}
        <table>
            <tr>
                <td>Название</td>
@@ -41,7 +37,7 @@ News
            </tr>
 
 
-           {% for new in news %}
+           {% for new in category_news_list %}
            <tr>
                <td>{{ new.title|censor }}</td>
                <td>{{ new.dateCreation }}</td>
